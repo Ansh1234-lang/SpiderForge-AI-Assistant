@@ -7,6 +7,8 @@ allowBuilds:
   esbuild: set this to true or false
   msgpackr-extract: set this to true or false
   prisma: set this to true or false
+  sharp: set this to true or false
+  unrs-resolver: set this to true or false
 minimumReleaseAgeExclude:
   - '@turbo/darwin-64@2.9.18'
   - '@turbo/darwin-arm64@2.9.18'
