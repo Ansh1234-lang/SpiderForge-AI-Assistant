@@ -1,0 +1,123 @@
+# =========================
+# Dependencies
+# =========================
+node_modules
+.pnpm-store
+
+# =========================
+# Build Outputs
+# =========================
+dist
+build
+.next
+out
+coverage
+
+# =========================
+# Environment Variables
+# =========================
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+apps/*/.env
+apps/*/.env.local
+apps/*/.env.development
+apps/*/.env.production
+
+# =========================
+# Prisma
+# =========================
+prisma/dev.db
+prisma/dev.db-journal
+
+# =========================
+# Logs
+# =========================
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# VS Code
+# =========================
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# =========================
+# JetBrains
+# =========================
+.idea
+
+# =========================
+# Turbo
+# =========================
+.turbo
+
+# =========================
+# TypeScript
+# =========================
+*.tsbuildinfo
+
+# =========================
+# Docker
+# =========================
+docker-data
+postgres-data
+redis-data
+qdrant-data
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+.venv/
+venv/
+env/
+
+# =========================
+# FastAPI
+# =========================
+.pytest_cache
+.mypy_cache
+
+# =========================
+# Uploads
+# =========================
+uploads
+temp
+tmp
+
+# =========================
+# Generated Reports
+# =========================
+reports
+artifacts
+
+# =========================
+# VS Code Extension Builds
+# =========================
+*.vsix
+
+# =========================
+# Secrets
+# =========================
+*.pem
+*.key
+*.crt
