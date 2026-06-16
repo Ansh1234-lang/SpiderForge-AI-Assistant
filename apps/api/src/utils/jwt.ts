@@ -15,7 +15,7 @@ export function generateAccessToken(payLoad:jwtPayLoad){
     );
 }
 
-export function generateFreshToken(payload:jwtPayLoad){
+export function generateRefreshToken(payload:jwtPayLoad){
     return jwt.sign(
         payload,
         process.env.JWT_REFRESH_SECRET!,
@@ -32,7 +32,7 @@ export function verifyAccessToken(token:string){
     );
 }
 
-export function verifyrefreshToken(token:string){
+export function verifyRefreshToken(token:string){
     return jwt.verify(
         token,
         process.env.JRT_REFRESH_SECRET!
