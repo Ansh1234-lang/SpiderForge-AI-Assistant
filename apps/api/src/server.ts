@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet"
 import cookieParser from "cookie-parser"
 import authRoutes from "./modules/auth/auth.routes"
+import { errorHandler } from "./middleware/error-handler";
 
 const app = express();
 
@@ -20,7 +21,12 @@ app.get("/health",(_,res)=>{
 });
 
 app.use("/api.auth",authRoutes);
-
+app.use(errorHandler);
+app._router?.stack?.forEach((r: any) => {
+  if (r.route && r.route.path) {
+    console.log(r.route.path);
+  }
+});
 app.listen(5000,()=>{
     console.log("api running on port 5000");
 })
