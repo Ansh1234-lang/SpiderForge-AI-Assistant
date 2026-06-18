@@ -4,6 +4,7 @@ import helmet from "helmet"
 import cookieParser from "cookie-parser"
 import authRoutes from "./modules/auth/auth.routes"
 import { errorHandler } from "./middleware/error-handler";
+import adminRoutes from "./modules/admin/admin.route";
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.json());
+app.use("/api/admin", adminRoutes)
 
 app.get("/health",(_,res)=>{
     res.json({
