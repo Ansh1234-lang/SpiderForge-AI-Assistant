@@ -20,13 +20,18 @@ app.get("/health",(_,res)=>{
     });
 });
 
-app.use("/api.auth",authRoutes);
+app.use("/api/auth",authRoutes);
 app.use(errorHandler);
 app._router?.stack?.forEach((r: any) => {
   if (r.route && r.route.path) {
     console.log(r.route.path);
   }
 });
+app.get("/api/auth/register",(_,res)=>{
+    res.json({
+        route:"register route exist , but use post"
+    })
+})
 app.listen(5000,()=>{
     console.log("api running on port 5000");
 })
