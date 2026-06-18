@@ -13,6 +13,12 @@ enum Role {
   ADMIN
 }
 
+enum projectType {
+  GITHUB
+  ZIP
+  LOCAL
+}
+
 model User {
   id       String @id @default(uuid())
   email    String @unique
@@ -81,6 +87,8 @@ model Project {
   name String
 
   githubUrl String?
+
+  type projectType
 
   vectorCollectionId String?
 

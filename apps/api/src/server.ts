@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser"
 import authRoutes from "./modules/auth/auth.routes"
 import { errorHandler } from "./middleware/error-handler";
 import adminRoutes from "./modules/admin/admin.route";
+import projectRoutes from "./modules/project/project.route"
 
 const app = express();
 
@@ -14,7 +15,6 @@ app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.json());
-app.use("/api/admin", adminRoutes)
 
 app.get("/health",(_,res)=>{
     res.json({
@@ -29,6 +29,9 @@ app._router?.stack?.forEach((r: any) => {
     console.log(r.route.path);
   }
 });
+app.use("/api/admin", adminRoutes)
+app.use("/api/projects",projectRoutes);
+
 app.get("/api/auth/register",(_,res)=>{
     res.json({
         route:"register route exist , but use post"

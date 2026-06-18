@@ -1,6 +1,6 @@
+// import { error } from "console";
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { success } from "zod";
 
 
 export interface AuthRequest extends Request {
@@ -16,6 +16,8 @@ export const authenticate = (
     next: NextFunction
 ) => {
     try {
+        console.log("PATH:" , req.path);
+        console.log("AUTH:",req.headers.authorization)
         const authHeader = req.headers.authorization;
         if (!authHeader) {
             return res.status(401).json({
@@ -33,7 +35,8 @@ export const authenticate = (
         }
         req.user = decoded;
         next()
-    } catch {
+    } catch(err) {
+        console.log("AUTH ERROR:",err);
         return res.status(401).json({
             success: false,
             message: "Invalid token"
