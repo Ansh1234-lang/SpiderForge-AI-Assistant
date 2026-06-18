@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express"
 import { AuthService } from "./auth.service"
 import { registerSchema, loginSchema } from "./auth.validation"
 import { setRefreshTokenCookie, } from "../../utils/cookies"
+import { AuthRequest } from "../../middleware/authenticate"
+import { success } from "zod"
 
 export class AuthController {
     // register User
@@ -49,5 +51,15 @@ export class AuthController {
         } catch (err) {
             next(err)
         }
+    }
+
+    // current usetr end point
+    static async me(
+        req:AuthRequest,res:Response
+    ){
+        return res.json({
+            success:true,
+            user:req.user
+        })
     }
 }
