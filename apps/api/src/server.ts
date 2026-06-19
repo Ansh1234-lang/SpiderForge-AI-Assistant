@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser"
 import authRoutes from "./modules/auth/auth.routes"
 import { errorHandler } from "./middleware/error-handler";
 import adminRoutes from "./modules/admin/admin.route";
-import projectRoutes from "./modules/project/project.route"
+import projectRoutes from "./modules/project/routes/project.route"
 
 const app = express();
 
