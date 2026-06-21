@@ -10,4 +10,6 @@ router.get("/",authenticate,ProjectController.getProjects);
 
 router.post("/validate",authenticate,ProjectController.validateRepo);
 
+router.post("/:projectId/clone",authenticate,ProjectController.cloneRepository)
+
 export default router;

@@ -40,3 +40,5 @@ app.get("/api/auth/register",(_,res)=>{
 app.listen(5000,()=>{
     console.log("api running on port 5000");
 })
+
+console.log("CWD",process.cwd());

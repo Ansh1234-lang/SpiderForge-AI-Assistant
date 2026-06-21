@@ -3,6 +3,8 @@ import { ProjectService } from "../services/project.service";
 import { AuthRequest } from "../../../middleware/authenticate";
 import { GithubService } from "../services/github.service";
 import { parseGithubUrl } from "../utils/github";
+import { RepositoryService } from "../services/repository.service";
+import {prisma} from "../../../lib/prisma"
 
 
 export class ProjectController {
@@ -64,5 +66,36 @@ export class ProjectController {
         }
     }
 
+    // clone repository controller
+    static async cloneRepository(req:AuthRequest,res:Response){
+        try{
+            const projectId = req.params.projectId as string;
+            if (!projectId){
+                return res.status(400).json({
+                    success:false,
+                    message:"Project id is required"
+                })
+            }
+            const project = await prisma.project.findUnique({
+                where:{
+                    id : projectId,
+                },
+            });
+            const path = await RepositoryService.cloneRepository(
+                project!.githubUrl!,
+                projectId);
+            return res.json({
+                success:true,
+                message:"repository cloned successfully",
+                path,
+            })
+        }catch(e){
+            console.error(e);
+            return res.status(500).json({
+                success:false,
+                message:"failed to clone repository"
+            })
+        }
+    }
 
 }

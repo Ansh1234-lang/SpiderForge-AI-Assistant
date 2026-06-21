@@ -3,11 +3,12 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 
-export interface AuthRequest extends Request {
-    user?: {
-        userId: string,
-        role: string,
-    };
+export interface AuthRequest
+  extends Request<{ projectId: string }> {
+  user?: {
+    userId: string;
+    role: string;
+  };
 }
 
 export const authenticate = (
