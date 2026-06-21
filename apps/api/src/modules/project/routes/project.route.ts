@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { authenticate } from "../../../middleware/authenticate";
 import { ProjectController } from "../controllers/project.controller";
+import { projectType } from "@prisma/client";
+
 
 const router = Router();
 
@@ -11,5 +13,7 @@ router.get("/",authenticate,ProjectController.getProjects);
 router.post("/validate",authenticate,ProjectController.validateRepo);
 
 router.post("/:projectId/clone",authenticate,ProjectController.cloneRepository)
+
+router.get("/:projectId/scan",authenticate,ProjectController.scanRepository)
 
 export default router;

@@ -5,7 +5,9 @@ import { GithubService } from "../services/github.service";
 import { parseGithubUrl } from "../utils/github";
 import { RepositoryService } from "../services/repository.service";
 import {prisma} from "../../../lib/prisma"
-
+import { ScannerService } from "../services/scanner.service";
+import path from "path";
+import { success } from "zod";
 
 export class ProjectController {
     //  create project
@@ -98,4 +100,34 @@ export class ProjectController {
         }
     }
 
+    // scanner Controller
+    static async scanRepository(
+        req:AuthRequest,
+        res:Response
+    ){
+        try{
+            const projectId = req.params.projectId as string;
+            const repoPath = path.join(
+                process.cwd(),
+                "..",
+                "..",
+                "storage",
+                "repositories",
+                projectId
+            );
+            const files = await ScannerService.scanRepository(repoPath);
+
+            return res.json({
+                success:true,
+                count:files.length,
+                data:files,
+            })
+        }catch(e:any){
+            console.error("SCAN ERROR",e);
+            return res.status(500).json({
+                success:false,
+                message:"failed tp scan repository"
+            })
+        }
+    }
 }
