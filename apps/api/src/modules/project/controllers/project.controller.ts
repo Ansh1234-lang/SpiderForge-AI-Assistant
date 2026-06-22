@@ -4,10 +4,13 @@ import { AuthRequest } from "../../../middleware/authenticate";
 import { GithubService } from "../services/github.service";
 import { parseGithubUrl } from "../utils/github";
 import { RepositoryService } from "../services/repository.service";
-import {prisma} from "../../../lib/prisma"
+import { prisma } from "../../../lib/prisma"
 import { ScannerService } from "../services/scanner.service";
+import { chunkService } from "../services/chunk.service";
 import path from "path";
 import { success } from "zod";
+import { tr } from "zod/locales";
+
 
 export class ProjectController {
     //  create project
@@ -69,43 +72,43 @@ export class ProjectController {
     }
 
     // clone repository controller
-    static async cloneRepository(req:AuthRequest,res:Response){
-        try{
+    static async cloneRepository(req: AuthRequest, res: Response) {
+        try {
             const projectId = req.params.projectId as string;
-            if (!projectId){
+            if (!projectId) {
                 return res.status(400).json({
-                    success:false,
-                    message:"Project id is required"
+                    success: false,
+                    message: "Project id is required"
                 })
             }
             const project = await prisma.project.findUnique({
-                where:{
-                    id : projectId,
+                where: {
+                    id: projectId,
                 },
             });
             const path = await RepositoryService.cloneRepository(
                 project!.githubUrl!,
                 projectId);
             return res.json({
-                success:true,
-                message:"repository cloned successfully",
+                success: true,
+                message: "repository cloned successfully",
                 path,
             })
-        }catch(e){
+        } catch (e) {
             console.error(e);
             return res.status(500).json({
-                success:false,
-                message:"failed to clone repository"
+                success: false,
+                message: "failed to clone repository"
             })
         }
     }
 
     // scanner Controller
     static async scanRepository(
-        req:AuthRequest,
-        res:Response
-    ){
-        try{
+        req: AuthRequest,
+        res: Response
+    ) {
+        try {
             const projectId = req.params.projectId as string;
             const repoPath = path.join(
                 process.cwd(),
@@ -118,15 +121,48 @@ export class ProjectController {
             const files = await ScannerService.scanRepository(repoPath);
 
             return res.json({
-                success:true,
-                count:files.length,
-                data:files,
+                success: true,
+                count: files.length,
+                data: files,
             })
-        }catch(e:any){
-            console.error("SCAN ERROR",e);
+        } catch (e: any) {
+            console.error("SCAN ERROR", e);
             return res.status(500).json({
-                success:false,
-                message:"failed tp scan repository"
+                success: false,
+                message: "failed tp scan repository"
+            })
+        }
+    }
+
+    // chunk controller
+    static async chunkRepository(
+        req: AuthRequest, res: Response
+    ) {
+        try {
+            const projectId = req.params.projectId as string
+            const repoPath = path.join(
+                process.cwd(),
+                "..",
+                "..",
+                "storage",
+                "repositories",
+                projectId
+            )
+            const files = await ScannerService.scanRepository(
+                repoPath
+            );
+            const chunks = chunkService.chunkFiles(files);
+            return res.json({
+                success: true,
+                files: files.length,
+                chunks: chunks.length,
+                data: chunks.slice(0, 10),
+            })
+        } catch (e) {
+            console.error("CHUNK ERROR", e)
+            return res.status(500).json({
+                success: true,
+                message: "failed to chunk repository"
             })
         }
     }

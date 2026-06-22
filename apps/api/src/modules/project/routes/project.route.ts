@@ -16,4 +16,6 @@ router.post("/:projectId/clone",authenticate,ProjectController.cloneRepository)
 
 router.get("/:projectId/scan",authenticate,ProjectController.scanRepository)
 
+router.get("/:projectId/chunks",authenticate,ProjectController.chunkRepository)
+
 export default router;
