@@ -18,4 +18,6 @@ router.get("/:projectId/scan",authenticate,ProjectController.scanRepository)
 
 router.get("/:projectId/chunks",authenticate,ProjectController.chunkRepository)
 
+router.post("/:projectId/index",authenticate,ProjectController.indexRepository)
+
 export default router;

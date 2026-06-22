@@ -98,7 +98,8 @@ model Project {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  chats Chat[]
+  chats  Chat[]
+  chunks Chunk[]
 }
 
 model Chat {
@@ -165,4 +166,17 @@ model Subscription {
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Chunk {
+  id        String @id @default(uuid())
+  projectId String
+
+  filePath   String
+  content    String
+  chunkIndex Int
+
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id])
 }

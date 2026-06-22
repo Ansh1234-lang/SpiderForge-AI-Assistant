@@ -1,4 +1,5 @@
-import { response, Response } from "express";
+import { Response } from "express";
+import path from "path";
 import { ProjectService } from "../services/project.service";
 import { AuthRequest } from "../../../middleware/authenticate";
 import { GithubService } from "../services/github.service";
@@ -7,9 +8,10 @@ import { RepositoryService } from "../services/repository.service";
 import { prisma } from "../../../lib/prisma"
 import { ScannerService } from "../services/scanner.service";
 import { chunkService } from "../services/chunk.service";
-import path from "path";
+
+import { IndexingService } from "../services/indexing.service";
 import { success } from "zod";
-import { tr } from "zod/locales";
+
 
 
 export class ProjectController {
@@ -163,6 +165,28 @@ export class ProjectController {
             return res.status(500).json({
                 success: true,
                 message: "failed to chunk repository"
+            })
+        }
+    }
+
+    // index 
+    static async indexRepository(
+        req:AuthRequest,res:Response
+    )
+    {
+        try{
+            const projectId = req.params.projectId as string;
+            const result = await IndexingService.indexRepository(projectId);
+            return res.json({
+                success:true,
+                files:result.files,
+                chunks:result.chunks,
+            })
+        }catch(e){
+            console.error(e)
+            return res.status(500).json({
+                success:false,
+                message:"failed to index repository"
             })
         }
     }

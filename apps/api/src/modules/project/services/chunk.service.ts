@@ -3,7 +3,7 @@ import { RepositoryFile } from "./scanner.service";
 export interface codeChunk{
     filePath:string,
     content : string,
-    chuckIndex :number,
+    chunkIndex :number,
 }
 
 export class chunkService{
@@ -20,7 +20,7 @@ export class chunkService{
                     content:content.slice(
                         i,i+chunkSize
                     ),
-                    chuckIndex:Math.floor(i/chunkSize)
+                    chunkIndex:Math.floor(i/chunkSize)
                 })
             }
         }
