@@ -176,6 +176,8 @@ model Chunk {
   content    String
   chunkIndex Int
 
+  embedding Json?
+
   createdAt DateTime @default(now())
 
   project Project @relation(fields: [projectId], references: [id])
