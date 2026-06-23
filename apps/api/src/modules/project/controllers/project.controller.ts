@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { response, Response } from "express";
 import path from "path";
 import { ProjectService } from "../services/project.service";
 import { AuthRequest } from "../../../middleware/authenticate";
@@ -10,7 +10,8 @@ import { ScannerService } from "../services/scanner.service";
 import { chunkService } from "../services/chunk.service";
 
 import { IndexingService } from "../services/indexing.service";
-import { success } from "zod";
+import { string, success } from "zod";
+import { EmbeddingService } from "../services/embedding.service";
 
 
 
@@ -169,24 +170,41 @@ export class ProjectController {
         }
     }
 
-    // index 
+    // index controller
     static async indexRepository(
-        req:AuthRequest,res:Response
-    )
-    {
-        try{
+        req: AuthRequest, res: Response
+    ) {
+        try {
             const projectId = req.params.projectId as string;
             const result = await IndexingService.indexRepository(projectId);
             return res.json({
-                success:true,
-                files:result.files,
-                chunks:result.chunks,
+                success: true,
+                files: result.files,
+                chunks: result.chunks,
             })
-        }catch(e){
+        } catch (e) {
             console.error(e)
             return res.status(500).json({
-                success:false,
-                message:"failed to index repository"
+                success: false,
+                message: "failed to index repository"
+            })
+        }
+    }
+
+    // embed controller
+    static async embedRepository(req: AuthRequest, res: Response) {
+        try {
+            const projectId = req.params.projectId as string;
+            await EmbeddingService.embedProject(projectId)
+            return res.json({
+                success: true,
+                message: "embedding generated"
+            })
+        } catch (e) {
+            console.error(e)
+            response.status(500).json({
+                success: false,
+                message: "failed to generate embeddings"
             })
         }
     }

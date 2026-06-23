@@ -20,4 +20,6 @@ router.get("/:projectId/chunks",authenticate,ProjectController.chunkRepository)
 
 router.post("/:projectId/index",authenticate,ProjectController.indexRepository)
 
+router.post("/:projectId/embed",authenticate,ProjectController.embedRepository)
+
 export default router;
