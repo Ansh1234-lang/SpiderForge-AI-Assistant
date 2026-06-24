@@ -22,4 +22,6 @@ router.post("/:projectId/index",authenticate,ProjectController.indexRepository)
 
 router.post("/:projectId/embed",authenticate,ProjectController.embedRepository)
 
+router.post("/:projectId/search",authenticate,ProjectController.searchRepository)
+
 export default router;

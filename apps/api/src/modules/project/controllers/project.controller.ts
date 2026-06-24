@@ -8,10 +8,9 @@ import { RepositoryService } from "../services/repository.service";
 import { prisma } from "../../../lib/prisma"
 import { ScannerService } from "../services/scanner.service";
 import { chunkService } from "../services/chunk.service";
-
-import { IndexingService } from "../services/indexing.service";
-import { string, success } from "zod";
+import { IndexingService } from "../services/indexing.service";import { string, success } from "zod";
 import { EmbeddingService } from "../services/embedding.service";
+import { SearchService } from "../services/search.service";
 
 
 
@@ -205,6 +204,26 @@ export class ProjectController {
             response.status(500).json({
                 success: false,
                 message: "failed to generate embeddings"
+            })
+        }
+    }
+
+    // search controller
+    static async searchRepository(req:AuthRequest,res:Response){
+        try{
+            const projectId = req.params.projectId as string;
+            const {query} = req.body;
+
+            const result = await SearchService.search(projectId,query);
+            return res.json({
+                success:true,
+                result
+            })
+        }catch(e:any){
+            console.error("SEARCH ERROR",e);
+            res.status(500).json({
+                success:false,
+                message:e.message,
             })
         }
     }
