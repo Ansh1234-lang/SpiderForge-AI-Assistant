@@ -31,7 +31,7 @@ export class SearchService {
             score: cosineSimilarity(queryEmbedding, chunk.embedding as number[])
         }));
         scoredChunks.sort((a, b) => b.score - a.score)
-
+        console.log(scoredChunks.slice(0,5).map(c=>({score:c.score,file:c.filePath})))
         return scoredChunks.slice(0, 5);
     }
 }

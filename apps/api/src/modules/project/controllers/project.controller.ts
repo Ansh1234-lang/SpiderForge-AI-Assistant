@@ -8,9 +8,10 @@ import { RepositoryService } from "../services/repository.service";
 import { prisma } from "../../../lib/prisma"
 import { ScannerService } from "../services/scanner.service";
 import { chunkService } from "../services/chunk.service";
-import { IndexingService } from "../services/indexing.service";import { string, success } from "zod";
+import { IndexingService } from "../services/indexing.service"; import { string, success } from "zod";
 import { EmbeddingService } from "../services/embedding.service";
 import { SearchService } from "../services/search.service";
+import { ChatService } from "../services/chat.service";
 
 
 
@@ -209,22 +210,39 @@ export class ProjectController {
     }
 
     // search controller
-    static async searchRepository(req:AuthRequest,res:Response){
-        try{
+    static async searchRepository(req: AuthRequest, res: Response) {
+        try {
             const projectId = req.params.projectId as string;
-            const {query} = req.body;
+            const { query } = req.body;
 
-            const result = await SearchService.search(projectId,query);
+            const result = await SearchService.search(projectId, query);
             return res.json({
-                success:true,
+                success: true,
                 result
             })
-        }catch(e:any){
-            console.error("SEARCH ERROR",e);
+        } catch (e: any) {
+            console.error("SEARCH ERROR", e);
             res.status(500).json({
-                success:false,
-                message:e.message,
+                success: false,
+                message: e.message,
             })
+        }
+    }
+
+    // chat controller
+    static async chatRepository(req: AuthRequest, res: Response) {
+        try {
+            const projectId = req.params.projectId as string;
+            const { question } = req.body;
+            const answer = await ChatService.chat(projectId, question);
+            return res.json({
+                success: true,
+                answer
+            })
+        }
+        catch (e:any) {
+            console.error("ERROR CATCHED",e)
+            return res.status(500).json({ success: false, message: e.message })
         }
     }
 }
