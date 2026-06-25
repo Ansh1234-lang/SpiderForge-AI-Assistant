@@ -9,7 +9,7 @@ export class EmbeddingService {
       where: {
         projectId,
       },
-      take: 30,
+      // take: 30, //limit the embedding
     });
 
     for (const chunk of chunks) {

@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { SearchService } from "./search.service";
+import { error } from "console";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY!, })
 
@@ -40,7 +41,16 @@ export class ChatService {
 
         // const response = await ai.models.generateContent({ model: "gemini-2.5-flash-lite", contents: prompt });
 
-        return await this.generateResponse(prompt);
+        try{
+            return await this.generateResponse(prompt);
+        }
+        catch(e:any){
+            console.error("CATCHED ERROR",e);
+            if (e.status === 429){
+                throw new Error("Gemini quota exceeded . please try again later")
+            }
+            throw e
+        }
     };
     
 
