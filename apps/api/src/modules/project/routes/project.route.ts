@@ -26,4 +26,12 @@ router.post("/:projectId/search",authenticate,ProjectController.searchRepository
 
 router.post("/:projectId/chat",authenticate,ProjectController.chatRepository)
 
+router.post("/:projectId/chats",authenticate,ProjectController.createChat);
+
+router.get("/:projectId/chats",authenticate,ProjectController.getChats,);
+
+router.get("/chat/:chatId/messages",authenticate,ProjectController.getMessages);
+
+
+
 export default router;

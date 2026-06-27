@@ -1,4 +1,4 @@
-import { response, Response } from "express";
+import { Response } from "express";
 import path from "path";
 import { ProjectService } from "../services/project.service";
 import { AuthRequest } from "../../../middleware/authenticate";
@@ -12,6 +12,7 @@ import { IndexingService } from "../services/indexing.service"; import { string,
 import { EmbeddingService } from "../services/embedding.service";
 import { SearchService } from "../services/search.service";
 import { ChatService } from "../services/chat.service";
+import { ChatHistoryService } from "../services/chat-history.service";
 
 
 
@@ -22,8 +23,6 @@ export class ProjectController {
         res: Response,
     ) {
         const project =
-            console.log("REQ USER:", req.user);
-        console.log("REQ BODY:", req.body)
         await ProjectService.createProject(
             req.user!.userId,
             req.body,
@@ -202,7 +201,7 @@ export class ProjectController {
             })
         } catch (e) {
             console.error(e)
-            response.status(500).json({
+            res.status(500).json({
                 success: false,
                 message: "failed to generate embeddings"
             })
@@ -233,16 +232,46 @@ export class ProjectController {
     static async chatRepository(req: AuthRequest, res: Response) {
         try {
             const projectId = req.params.projectId as string;
-            const { question } = req.body;
-            const answer = await ChatService.chat(projectId, question);
+            const {chatId, question } = req.body;
+            const answer = await ChatService.chat(projectId,chatId, question);
             return res.json({
                 success: true,
                 answer
             })
         }
-        catch (e:any) {
-            console.error("ERROR CATCHED",e)
+        catch (e: any) {
+            console.error("ERROR CATCHED", e)
             return res.status(500).json({ success: false, message: e.message })
         }
     }
+
+    // create chat controller
+    static async createChat(req: AuthRequest, res: Response) {
+        const projectId = req.params.projectId as string
+        const chat = await ChatHistoryService.createChat(projectId, req.user!.userId);
+        return res.status(201).json({
+            success: true,
+            chat
+        })
+    }
+
+    // get chat controller
+    static async getChats(req: AuthRequest, res: Response) {
+        const projectId = req.params.projectId as string;
+        const chats = await ChatHistoryService.getProjectChats(projectId,);
+        return res.json({
+            success: true,
+            chats,
+        })
+    }
+    // get messages controller
+    static async getMessages(req: AuthRequest, res: Response) {
+        const {chatId} = req.params;
+        const messages = await ChatHistoryService.getMessages(chatId);
+        return res.json({
+            success: true,
+            messages
+        })
+    }
+
 }

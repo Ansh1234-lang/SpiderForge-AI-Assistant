@@ -1,11 +1,11 @@
 import { GoogleGenAI } from "@google/genai";
 import { SearchService } from "./search.service";
-import { error } from "console";
+import { prisma } from "../../../lib/prisma";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY!, })
 
 export class ChatService {
-    static async generateResponse(prompt: string) {
+    static async generateResponse(prompt: string) :Promise<string>{
         for (let i = 0; i < 3; i++) {
             try {
                 const response = await ai.models.generateContent({
@@ -13,7 +13,7 @@ export class ChatService {
                     contents: prompt,
                 });
 
-                return response.text;
+                return response.text ??"";
             } catch (error: any) {
                 if (error.status === 503 && i < 2) {
                     console.log(`Retry ${i + 1}...`);
@@ -25,7 +25,7 @@ export class ChatService {
         }
         throw new Error("failed to generate response after reties")
     }
-    static async chat(projectId: string, question: string) {
+    static async chat(projectId: string,chatId:string, question: string) {
         const results = (await SearchService.search(projectId, question)).slice(0,5);
         const context = results.map((chunk) => `FILE:${chunk.filePath}\n${chunk.content}`).join("\n\n--------------\n\n");
         const prompt = `
@@ -42,7 +42,11 @@ export class ChatService {
         // const response = await ai.models.generateContent({ model: "gemini-2.5-flash-lite", contents: prompt });
 
         try{
-            return await this.generateResponse(prompt);
+            await prisma.message.create({data:{chatId,role:"user",content:question,}})
+            const answer=await this.generateResponse(prompt);
+            await prisma.message.create({data:{chatId,role:"assistant",content:answer}})
+            await prisma.chat.update({where:{id:chatId},data:{}})
+            return answer
         }
         catch(e:any){
             console.error("CATCHED ERROR",e);
