@@ -1,6 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { SearchService } from "./search.service";
 import { prisma } from "../../../lib/prisma";
+import { ConversationService } from "./conversation.service";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY!, })
 
@@ -26,17 +27,38 @@ export class ChatService {
         throw new Error("failed to generate response after reties")
     }
     static async chat(projectId: string,chatId:string, question: string) {
+        const history = await ConversationService.getConversation(chatId);
+        console.log(history)
+        const conversation = ConversationService.formatConversation(history);
+        console.log(conversation)
         const results = (await SearchService.search(projectId, question)).slice(0,5);
         const context = results.map((chunk) => `FILE:${chunk.filePath}\n${chunk.content}`).join("\n\n--------------\n\n");
         const prompt = `
         You are an expert software engineer.
+
         Answer ONLY using the repository context below.
+
         If the answer is not present in the context, say :
+
         "I could not find that information in the repository"
 
-        Repository Context :${context}
+        ========================
+        Previous Conversation
+        ========================
 
-        Question:${question}
+        ${conversation}
+
+        ========================
+        Repository Context
+        ========================
+
+        ${context}
+
+        ========================
+        Current Question
+        ========================
+
+        ${question}
         `;
 
         // const response = await ai.models.generateContent({ model: "gemini-2.5-flash-lite", contents: prompt });
