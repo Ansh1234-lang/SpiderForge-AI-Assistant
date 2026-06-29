@@ -32,6 +32,8 @@ router.get("/:projectId/chats",authenticate,ProjectController.getChats,);
 
 router.get("/chat/:chatId/messages",authenticate,ProjectController.getMessages);
 
+router.post("/:projectId/chat/stream",authenticate,ProjectController.streamChat)
+
 
 
 export default router;

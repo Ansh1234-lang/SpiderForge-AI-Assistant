@@ -274,4 +274,13 @@ export class ProjectController {
         })
     }
 
+    // stream controller
+    static async streamChat(req:AuthRequest,res:Response){
+        res.setHeader("Content-Type","text/event-stream")
+        res.setHeader("Cache-Control","no-cache")
+        res.setHeader("Connection","keet-alive")
+        res.write("data: connected\n\n")
+        res.end();
+    }
+    
 }
