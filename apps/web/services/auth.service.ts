@@ -6,6 +6,16 @@ export interface LoginData{
     password:string;
 }
 
+export interface LoginResponse{
+    success:boolean;
+    accessToken:string;
+    user:{
+        id:string;
+        email:string;
+        role:string;
+    }
+}
+
 export interface RegisterData {
     name:string;
     email:string;
@@ -13,8 +23,8 @@ export interface RegisterData {
 }
 
 export const AuthService = {
-    async login(data:LoginData){
-        const response = await api.post("/auth/login",data)
+    async login(data:LoginData):Promise<LoginResponse>{
+        const response = await api.post<LoginResponse>("/auth/login",data)
         return response.data
     },
     async register(data:RegisterData){

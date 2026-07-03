@@ -55,18 +55,24 @@ export class AuthService {
           email: data.email,
         },
       });
+    console.log("Email entered:", data.email);
+    console.log("User found:", !!user);
 
     if (!user) {
       throw new Error(
         "Invalid credentials"
       );
     }
+    console.log("Stored hash:", user.password);
 
     const isValidPassword =
       await comparePassword(
         data.password,
         user.password
       );
+    console.log("Password entered:", data.password);
+    console.log("Password match:", isValidPassword);
+
 
     if (!isValidPassword) {
       throw new Error(
@@ -92,11 +98,11 @@ export class AuthService {
         userId: user.id,
         expiresAt: new Date(
           Date.now() +
-            30 *
-              24 *
-              60 *
-              60 *
-              1000
+          30 *
+          24 *
+          60 *
+          60 *
+          1000
         ),
       },
     });
