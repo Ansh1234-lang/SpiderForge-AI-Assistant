@@ -2,6 +2,7 @@
 
 import { useProjects } from "@/hooks/useProjects";
 import NewProjectDialog from "@/components/project/new-project-dialog";
+import Link from "next/link";
 
 export default function DashboardPage() {
     const { data, isLoading, isError } = useProjects();
@@ -51,18 +52,21 @@ export default function DashboardPage() {
             ) : (
                 <div className="space-y-4">
                     {projects.map((project: any) => (
-                        <div
+                        <Link
                             key={project.id}
-                            className="rounded-lg border p-5"
+                            href={`/project/${project.id}`}
+                            className="block"
                         >
-                            <h2 className="text-xl font-semibold">
-                                {project.name}
-                            </h2>
+                            <div className="rounded-lg border p-5 hover:border-blue-500 hover:shadow-lg transition">
+                                <h2 className="text-xl font-semibold">
+                                    {project.name}
+                                </h2>
 
-                            <p className="text-sm text-muted-foreground">
-                                {project.githubUrl}
-                            </p>
-                        </div>
+                                <p className="text-sm text-muted-foreground">
+                                    {project.githubUrl}
+                                </p>
+                            </div>
+                        </Link>
                     ))}
                 </div>
             )}
