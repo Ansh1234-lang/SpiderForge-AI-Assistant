@@ -121,4 +121,8 @@ artifacts
 # =========================
 *.pem
 *.key
-*.crt
+*.crt,
+
+
+storage/*
+!storage/.gitkeep
