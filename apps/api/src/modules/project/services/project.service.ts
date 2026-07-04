@@ -21,8 +21,17 @@ export class ProjectService {
             }
         });
     }
+    // get project
+    static async getProject(projectId:string,userId:string){
+        return prisma.project.findFirst({
+            where:{
+                id:projectId,
+                userId:userId,
+            }
+        })
+    }
 
-    // get Project
+    // get Projects
     static async getProjects(userId:string){
         return prisma.project.findMany({
             where:{

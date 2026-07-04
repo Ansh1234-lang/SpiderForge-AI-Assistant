@@ -34,7 +34,7 @@ export class ProjectController {
         });
     }
 
-    // get project
+    // get projects
     static async getProjects(req: AuthRequest, res: Response) {
         const projects = await ProjectService.getProjects(req.user!.userId);
         return res.json({
@@ -281,6 +281,25 @@ export class ProjectController {
         res.setHeader("Connection","keet-alive")
         res.write("data: connected\n\n")
         res.end();
+    }
+
+    // get project controller
+    static async getProject(req:AuthRequest, res:Response){
+        if (!req.user?.userId) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized",
+            });
+        }
+
+        const project = await ProjectService.getProject(
+            req.params.projectId,
+            req.user.userId,
+        )
+        res.json({
+            success:true,
+            project,
+        })
     }
     
 }

@@ -12,6 +12,8 @@ router.get("/",authenticate,ProjectController.getProjects);
 
 router.post("/validate",authenticate,ProjectController.validateRepo);
 
+router.get("/:projectId", authenticate, ProjectController.getProject);
+
 router.post("/:projectId/clone",authenticate,ProjectController.cloneRepository)
 
 router.get("/:projectId/scan",authenticate,ProjectController.scanRepository)
