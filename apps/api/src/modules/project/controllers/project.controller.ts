@@ -154,6 +154,15 @@ export class ProjectController {
                 repoPath
             );
             const chunks = chunkService.chunkFiles(files);
+            await prisma.chunk.deleteMany({where:{projectId,}})
+            await prisma.chunk.createMany({
+                data:chunks.map((chunk,index)=>({
+                    projectId,
+                    filePath:chunk.filePath,
+                    content:chunk.content,
+                    chunkIndex:index
+                }))
+            })
             return res.json({
                 success: true,
                 files: files.length,

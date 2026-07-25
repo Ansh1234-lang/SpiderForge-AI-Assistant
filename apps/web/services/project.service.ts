@@ -28,6 +28,12 @@ export const ProjectService = {
         )
         console.log("Scan repo",response)
         return response.data;
+    },
+    async chunkProject(projectId:string){
+        const response = await api.get(
+            `/projects/${projectId}/chunks`
+        )
+        return response.data
     }
     
 };
