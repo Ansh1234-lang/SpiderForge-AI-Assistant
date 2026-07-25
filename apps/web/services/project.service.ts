@@ -14,5 +14,13 @@ export const ProjectService = {
     async createProject(data:CreateProjectDto){
         const response = await api.post("/projects",data)
         return response.data
-    }
+    },
+    async cloneProject(projectId:string){
+        const response= await api.post(
+            `/projects/${projectId}/clone`
+        )
+        return response.data;
+    },
+    
+    
 };
