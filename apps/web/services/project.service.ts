@@ -21,6 +21,13 @@ export const ProjectService = {
         )
         return response.data;
     },
-    
+    async scanProject(projectId:string){
+        console.log("Calling scan api",projectId)
+        const response = await api.get(
+            `/projects/${projectId}/scan`
+        )
+        console.log("Scan repo",response)
+        return response.data;
+    }
     
 };
